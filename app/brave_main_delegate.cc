@@ -41,6 +41,7 @@
 #include "components/safe_browsing/core/features.h"
 #include "components/sync/base/sync_base_switches.h"
 #include "components/translate/core/browser/translate_prefs.h"
+#include "components/variations/variations_switches.h"
 #include "components/version_info/channel.h"
 #include "content/public/common/content_features.h"
 #include "content/public/common/content_switches.h"
@@ -70,6 +71,8 @@ namespace {
 // switches::kSyncServiceURL manually
 const char kBraveSyncServiceStagingURL[] =
     "https://sync-v2.bravesoftware.com/v2";
+// TODO(Moritz Haller): Inject via BRAVE_VARIATIONS_SERVICE_URL
+const char kVariationsServiceUrl[] = "https://variations.brave.com";
 #if defined(OFFICIAL_BUILD)
 // production
 const char kBraveSyncServiceURL[] = "https://sync-v2.brave.com/v2";
@@ -200,6 +203,10 @@ bool BraveMainDelegate::BasicStartupComplete(int* exit_code) {
                                  brave_sync_service_url.c_str());
 
   command_line.AppendSwitchASCII(switches::kLsoUrl, kDummyUrl);
+
+  // Brave variations
+  command_line.AppendSwitchASCII(variations::switches::kVariationsServerURL,
+                                kVariationsServiceUrl);
 
   // Enabled features.
   std::unordered_set<const char*> enabled_features = {
